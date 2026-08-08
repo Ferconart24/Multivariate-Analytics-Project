@@ -1,0 +1,153 @@
+---
+title: "Documento Técnico"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## Colegio Universitario de Cartago
+## Big Data
+## BD-165 - Modelos estadísticos avanzados de análisis de datos
+## Proyecto Final
+## Integrantes:
+- Marisol Víquez Rivera
+- Camila Jimenez
+- Gilary Granados Calvo
+- Fernando Contreras Artavia
+- Johel Barquero
+
+# 1. Introducción
+
+# 2. Descripción de la base de datos
+Ecommerce sales dataset
+
+Fuente: https://www.kaggle.com/datasets/abbas829/ecommerce-sales-dataset
+
+Estructura: 5000 filas y 15 columnas
+
+
+Este conjunto de datos contiene 5.000 transacciones minoristas sintéticas pero altamente realistas, diseñadas para reflejar la dinámica moderna del mercado online. Conecta la demografía de los clientes, la categorización de productos, las métricas financieras y la logística operativa en un único activo analítico coherente.
+
+Variables:
+
+Demografía: Edad, género y ubicación del cliente.
+
+Finanzas: Precios unitarios, cantidades, porcentajes de descuento aplicados e ingresos netos.
+
+Logística: Diferencias temporales entre las fechas de pedido y las fechas de envío.
+
+# 3. Exploración y preparación de los datos
+
+### Carga de datos
+
+```{r}
+df <- read.csv("ecommerce.csv")
+head(df)
+```
+### Tipos de variables
+```{r}
+str(df)
+```
+
+### Resumen del dataset
+```{r}
+summary(df)
+```
+
+### Dimensiones del df
+```{r}
+dim(df)
+```
+
+### Nulos
+```{r}
+colSums(is.na(df))
+```
+
+### Duplicados y verificar que order_id es único
+```{r}
+sum(duplicated(df)) # verificar que order_id sea único
+```
+
+### Tablas de Frecuencias 
+```{r}
+table(df$product_category)
+table(df$region)
+table(df$payment_method)
+
+# proporciones
+prop.table(table(df$product_category))
+```
+
+### Visualizaciones
+
+```{r, fig.width=12, fig.height=4}
+par(mfrow = c(1, 2))
+
+barplot(table(df$product_category), main = "Órdenes por categoría", las = 2,
+        col = c("#FF9AA2", "#FFB7B2", "#FFDAC1", "#E2F0CB", "#B5EAD7"))
+
+barplot(table(df$region), main = "Órdenes por región",
+        col = c("#A2D2FF", "#BDE0FE", "#CDB4DB", "#FFC8DD"))
+
+par(mfrow = c(1, 1))
+```
+
+### Análisis bivariado
+```{r, fig.width=12, fig.height=4}
+boxplot(revenue ~ product_category, data = df, las = 2, main = "Revenue por categoría",
+        col = c("#FF9AA2", "#FFB7B2", "#FFDAC1", "#E2F0CB", "#B5EAD7"),
+        xlab = "", ylab = "Revenue")
+
+boxplot(revenue ~ region, data = df, main = "Revenue por región",
+        col = c("#A2D2FF", "#BDE0FE", "#CDB4DB", "#FFC8DD"),
+        xlab = "Región", ylab = "Revenue")
+```
+
+### Cambiar el formato de la fecha
+
+```{r}
+df$order_date <- as.Date(df$order_date, format = "%m/%d/%Y")
+range(df$order_date)  # rango de fechas disponibles
+
+# órdenes por mes
+df$mes <- format(df$order_date, "%Y-%m")
+head(table(df$mes), 2)
+```
+
+```{r}
+write.csv(df, "datos_limpios.csv", row.names = FALSE)
+```
+
+# 4. Modelos aplicados
+(las tres técnicas, con su justificación)
+
+## K-means | K-medoids
+### ¿?
+```{r}
+# Aquí lo de Sol y Gilary y poner en ¿? la pregunta para el modelo 
+```
+
+
+## MANOVA
+### ¿?
+```{r}
+# Aquí lo de Camila y poner en ¿? la pregunta para el modelo 
+```
+
+## Series Temporales
+### ¿?
+```{r}
+# Aquí lo de Johel y Fernando y poner en ¿? la pregunta para el modelo 
+```
+
+# 5. Resultados
+(salidas, gráficos e interpretación)
+
+# 6. Discusión
+(significado de los resultados y limitaciones)
+
+# 7. Conclusiones
