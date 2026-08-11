@@ -418,7 +418,11 @@ Proyecto Final
 
 ## Introducción {#introduccion .page-section}
 
-Agregar introducción
+El comercio electrónico genera de forma continua grandes volúmenes de datos sobre clientes, productos y transacciones, cuyo análisis permite comprender mejor el comportamiento de compra y el desempeño del negocio. En este contexto, el presente proyecto tiene como objetivo aplicar técnicas de análisis multivariado a un conjunto de datos de ventas de comercio electrónico, con el fin de identificar patrones de compra, evaluar el efecto de factores como la región y la categoría del producto sobre los ingresos y la satisfacción de los clientes, y analizar el comportamiento de los ingresos mensuales a lo largo del tiempo.
+
+Para ello se emplean tres técnicas estudiadas en el curso: agrupamiento por K-medoids (PAM), para segmentar las transacciones según variables numéricas asociadas al comportamiento de compra; MANOVA, para determinar si la región geográfica y la categoría del producto influyen conjuntamente en el revenue y en el customer rating; y análisis de series temporales.
+
+A partir de estos análisis, el proyecto busca responder tres preguntas centrales:  Identificar patrones de comportamiento de compra entre las transacciones registradas.¿La región geográfica y la categoría del producto influyen en el desempeño de las ventas (revenue) y en la satisfacción de los clientes (customer rating) de una tienda? ¿Cuál es la tendencia y el patrón estacional de los ingresos (revenue) mensuales de la tienda en línea entre 2022 y 2025, y qué modelo de suavización exponencial (SES, Holt o Holt-Winters) predice mejor las ventas futuras?
 
 ## Descripción de los datos {#descripcion .page-section}
 
@@ -565,7 +569,6 @@ datos %>%
 ```
 
 ## Modelos aplicados {#aplicacion .tabset .page-section}
-(las tres técnicas, con su justificación)
 
 ### K-medoids
 #### ¿Qué patrones de compra pueden identificarse mediante K-Means y K-Medoids?
@@ -950,7 +953,9 @@ El modelo de Holt-Winters reproduce mejor el patrón de la serie, porque conside
 ## Conclusiones {#conclusiones .tabset .page-section}
 ### K-medoids
 
-bla bla
+El agrupamiento con K-medoids (PAM) permitió identificar tres patrones diferenciados de comportamiento de compra entre las transacciones, principalmente en función del valor de la compra (revenue) y del tiempo de entrega (delivery_days). El clúster 1 se distingue por concentrar las compras de mayor valor, mientras que los clústeres 2 y 3, con montos de compra similares y más bajos, se diferencian entre sí por la rapidez de la entrega: el clúster 2 agrupa las entregas más rápidas y el clúster 3 las más lentas. Este solapamiento parcial entre los clústeres 2 y 3 en la visualización confirma que la separación entre patrones de compra es más clara en la dimensión del valor de la compra que en la logística de entrega.
+
+En términos generales, la técnica permitió segmentar a los clientes en grupos con perfiles de compra distintos, lo cual resulta útil para orientar estrategias comerciales diferenciadas (por ejemplo, priorizar tiempos de entrega para el segmento de mayor valor).
 
 ### MANOVA
 De acuerdo con los resultados del MANOVA, no existen diferencias estadísticamente significativas en el ingreso (revenue) ni en la calificación del cliente (customer_rating) entre las distintas regiones, categorías de productos o la interacción entre ambos factores, ya que todos los valores p obtenidos fueron mayores que 0.05 (Región: p = 0.8558; Categoría del producto: p = 0.4217; Interacción: p = 0.2525).
