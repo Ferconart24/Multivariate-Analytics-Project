@@ -571,7 +571,7 @@ datos %>%
 ## Modelos aplicados {#aplicacion .tabset .page-section}
 
 ### K-medoids
-#### ¿Qué patrones de compra pueden identificarse mediante K-Means y K-Medoids?
+#### ¿Qué patrones de compra pueden identificarse mediante K-Medoids?
 
 Se aplicó la técnica de agrupamiento K-medoids (PAM, *Partitioning Around Medoids*) sobre las variables numéricas, con el objetivo de identificar patrones de comportamiento de compra entre las transacciones registradas.
 
@@ -857,25 +857,45 @@ plot(serie, ylab = "Ingresos mensuales (revenue)",
      main = "Ingresos mensuales - Tienda en línea")
 ```
 
+Gráfico Ingresos mensuales - Tienda en línea
+
+La serie de ingresos mensuales presenta una alta variabilidad durante el período 2022–2025, con meses de ingresos elevados y otros con disminuciones considerables. No se observa una tendencia general claramente creciente o decreciente, ya que los ingresos cambian continuamente a lo largo del período. Además, se perciben variaciones que podrían repetirse entre los años, lo que sugiere la posible existencia de un componente estacional que será analizado mediante la descomposición de la serie.
+
 ```{r}
 # Graficar los cuatro paneles.
 plot(desc)
 ```
+
+Gráfico de la descomposición temporal
+
+La descomposición de la serie muestra que los ingresos presentan una tendencia variable, con una disminución hacia los últimos períodos. El componente estacional presenta un patrón repetitivo entre los años, evidenciando que determinados meses tienden a presentar ingresos relativamente mayores o menores de forma periódica. Finalmente, el componente aleatorio presenta fluctuaciones importantes, indicando que existen variaciones en los ingresos que no son explicadas completamente por la tendencia ni por la estacionalidad.
 
 ```{r}
 autoplot(ajuste_ses) +
   labs(title = "Suavización Exponencial Simple (SES)")
 ```
 
+Gráfico Suavización Exponencial Simple (SES)
+
+La suavización exponencial simple genera una línea casi constante, ya que solo considera el nivel promedio de los ingresos. El modelo no toma en cuenta la tendencia ni la estacionalidad, por lo que no sigue los picos y disminuciones de la serie. El pronóstico para 2026 se mantiene prácticamente estable. Esto indica que el modelo no representa adecuadamente el comportamiento de los ingresos.
+
 ```{r}
 autoplot(ajuste_holt) +
   labs(title = "Método de Holt (con tendencia)")
 ```
 
+Gráfico Método de Holt (con tendencia)
+
+El método de Holt considera la tendencia de los ingresos, por lo que la línea presenta una disminución a lo largo del tiempo. Sin embargo, no considera la estacionalidad, por lo que no logra representar los cambios mensuales de la serie. El pronóstico continúa con una tendencia decreciente, indicando que los ingresos podrían seguir disminuyendo.
+
 ```{r}
 autoplot(ajuste_hw) +
   labs(title = "Holt-Winters (tendencia + estacionalidad)")
 ```
+
+Gráfico Holt-Winters (tendencia + estacionalidad)
+
+El método de Holt-Winters considera tanto la tendencia como la estacionalidad. Por eso, logra representar mejor los picos y disminuciones de los ingresos. Además, mantiene la tendencia decreciente observada en la serie. El pronóstico muestra que los ingresos podrían continuar disminuyendo, pero conservando un comportamiento estacional.
 
 ## Discusión {#discusion .tabset .page-section}
 ### K-medoids
@@ -917,26 +937,6 @@ Interacción = 0.2562
 De igual forma, no se encontraron diferencias significativas en la calificación de los clientes. Estos resultados confirman las conclusiones obtenidas en el MANOVA.
 
 ### Series temporales
-
-Gráfico Ingresos mensuales - Tienda en línea
-
-La serie de ingresos mensuales presenta una alta variabilidad durante el período 2022–2025, con meses de ingresos elevados y otros con disminuciones considerables. No se observa una tendencia general claramente creciente o decreciente, ya que los ingresos cambian continuamente a lo largo del período. Además, se perciben variaciones que podrían repetirse entre los años, lo que sugiere la posible existencia de un componente estacional que será analizado mediante la descomposición de la serie.
-
-Gráfico de la descomposición temporal
-
-La descomposición de la serie muestra que los ingresos presentan una tendencia variable, con una disminución hacia los últimos períodos. El componente estacional presenta un patrón repetitivo entre los años, evidenciando que determinados meses tienden a presentar ingresos relativamente mayores o menores de forma periódica. Finalmente, el componente aleatorio presenta fluctuaciones importantes, indicando que existen variaciones en los ingresos que no son explicadas completamente por la tendencia ni por la estacionalidad.
-
-Gráfico Suavización Exponencial Simple (SES)
-
-La suavización exponencial simple genera una línea casi constante, ya que solo considera el nivel promedio de los ingresos. El modelo no toma en cuenta la tendencia ni la estacionalidad, por lo que no sigue los picos y disminuciones de la serie. El pronóstico para 2026 se mantiene prácticamente estable. Esto indica que el modelo no representa adecuadamente el comportamiento de los ingresos.
-
-Gráfico Método de Holt (con tendencia)
-
-El método de Holt considera la tendencia de los ingresos, por lo que la línea presenta una disminución a lo largo del tiempo. Sin embargo, no considera la estacionalidad, por lo que no logra representar los cambios mensuales de la serie. El pronóstico continúa con una tendencia decreciente, indicando que los ingresos podrían seguir disminuyendo.
-
-Gráfico Holt-Winters (tendencia + estacionalidad)
-
-El método de Holt-Winters considera tanto la tendencia como la estacionalidad. Por eso, logra representar mejor los picos y disminuciones de los ingresos. Además, mantiene la tendencia decreciente observada en la serie. El pronóstico muestra que los ingresos podrían continuar disminuyendo, pero conservando un comportamiento estacional.
 
 Modelo con los errores más bajos 
 
