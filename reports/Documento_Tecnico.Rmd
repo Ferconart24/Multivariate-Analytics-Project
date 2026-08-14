@@ -1,0 +1,1000 @@
+---
+title: ""
+output:
+  html_document:
+    theme: flatly
+    highlight: zenburn
+    toc: false
+    self_contained: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+```{css, echo=FALSE}
+/* =========================
+   DISEÑO GENERAL
+   ========================= */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+:root{
+  --paper:#F7F5F0;
+  --page:#FFFFFF;
+  --ink:#201F1D;
+  --muted:#8A857B;
+  --line:#E4E0D6;
+  --accent:#7A3230;
+  --accent-soft:#F1E5E3;
+  --sidebar-header:#2E4057;
+}
+
+html{
+  scroll-behavior:smooth;
+}
+
+body{
+  background:var(--paper);
+  color:var(--ink);
+  font-family:'Inter', -apple-system, Helvetica, Arial, sans-serif;
+  font-size:15.5px;
+  line-height:1.65;
+}
+
+.main-container{
+  max-width:1000px !important;
+  margin-left:315px !important;
+  margin-right:45px !important;
+  padding-bottom:80px;
+}
+
+/* NAVEGACIÓN TIPO SPA: solo se muestra la sección activa */
+.page-section{
+  display:none;
+}
+.page-section.active-section{
+  display:block;
+}
+
+h1,h2,h3,h4,h5{
+  font-family:'Inter', sans-serif;
+  color:var(--ink);
+  font-weight:700;
+}
+
+h2{
+  color:var(--ink);
+  font-size:26px;
+  border-bottom:1px solid var(--line);
+  padding-bottom:12px;
+  margin-top:0;
+}
+
+h2::before{
+  color:var(--muted);
+  font-weight:400;
+  font-family:'JetBrains Mono',monospace;
+  font-size:16px;
+  margin-right:6px;
+}
+
+#introduccion h2::before{ content:"01  "; }
+#descripcion h2::before{ content:"02  "; }
+#exploracion h2::before{ content:"03  "; }
+#aplicacion h2::before{ content:"04  "; }
+#resultados h2::before{ content:"05  "; }
+#discusion h2::before{ content:"06  "; }
+#conclusiones h2::before{ content:"07  "; }
+
+h3{
+  font-size:19px;
+  margin-top:28px;
+  font-weight:600;
+}
+
+code,pre{
+  font-family:'JetBrains Mono',monospace !important;
+  font-size:12.5px;
+}
+
+pre{
+  border-radius:8px;
+  padding:16px 18px;
+}
+
+a{
+  color:var(--accent);
+}
+
+/* MENÚ LATERAL */
+.side-menu{
+  position:fixed;
+  z-index:2000;
+  left:22px;
+  top:28px;
+  width:255px;
+  max-height:calc(100vh - 56px);
+  overflow-y:auto;
+  background:var(--page);
+  border:1px solid var(--line);
+  border-radius:10px;
+  box-shadow:0 10px 28px rgba(32,31,29,.10);
+  padding:0 0 14px 0;
+}
+
+.side-menu-title{
+  background:var(--sidebar-header);
+  color:#fff;
+  font-family:'JetBrains Mono',monospace;
+  font-size:13px;
+  font-weight:600;
+  letter-spacing:.04em;
+  padding:16px 18px;
+  border-radius:9px 9px 0 0;
+}
+
+.side-menu ul{
+  list-style:none;
+  margin:0;
+  padding:10px 10px 0;
+}
+
+.side-menu li{
+  margin:2px 0;
+}
+
+.side-menu a{
+  display:flex;
+  align-items:center;
+  gap:9px;
+  color:var(--ink);
+  text-decoration:none;
+  padding:10px 11px;
+  border-left:3px solid transparent;
+  border-radius:0 6px 6px 0;
+}
+
+.side-menu a:hover{
+  background:var(--accent-soft);
+}
+
+.side-menu .menu-icon{
+  width:16px;
+  flex:0 0 16px;
+  color:var(--muted);
+}
+
+.side-menu .menu-text{
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+}
+
+.side-menu .menu-num{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;
+  color:var(--muted);
+  letter-spacing:.05em;
+}
+
+.side-menu .menu-title{
+  font-size:13px;
+  font-weight:600;
+  line-height:1.3;
+}
+
+.side-menu li.active > a{
+  border-left-color:var(--accent);
+  background:var(--accent-soft);
+}
+
+.side-menu li.active > a .menu-num,
+.side-menu li.active > a .menu-title,
+.side-menu li.active > a .menu-icon{
+  color:var(--accent);
+}
+
+/* PORTADA */
+.cover-page{
+  min-height:72vh;
+  flex-direction:column;
+  justify-content:center;
+  max-width:850px;
+  margin:20px auto 70px;
+  padding:65px;
+  background:var(--page);
+  border:1px solid var(--line);
+  border-radius:10px;
+  box-shadow:0 10px 30px rgba(32,31,29,.06);
+}
+
+.cover-page.active-section{
+  display:flex;
+}
+
+.cover-title{
+  font-size:32px;
+  font-weight:700;
+  color:var(--accent);
+  letter-spacing:.03em;
+  margin-bottom:30px;
+}
+
+.cover-institution{
+  font-size:16px;
+  line-height:1.85;
+  border-bottom:1px solid var(--line);
+  padding-bottom:25px;
+}
+
+.cover-members{
+  margin-top:28px;
+  line-height:1.8;
+}
+
+/* PESTAÑAS internas (estilo pill en caja gris) */
+.tabset{
+  margin-top:14px;
+  margin-bottom:50px;
+}
+
+.tabset .nav-tabs{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+  background:#F1EFEA;
+  border:1px solid var(--line);
+  border-radius:10px;
+  padding:6px;
+  margin-bottom:22px;
+}
+
+.tabset .nav-tabs>li{
+  float:none;
+}
+
+.tabset .nav-tabs>li>a{
+  color:var(--muted);
+  background:transparent;
+  border:none;
+  border-radius:7px;
+  font-family:'Inter',sans-serif;
+  font-size:12.5px;
+  font-weight:500;
+  padding:9px 13px;
+  margin:0;
+}
+
+.tabset .nav-tabs>li.active>a,
+.tabset .nav-tabs>li.active>a:hover,
+.tabset .nav-tabs>li.active>a:focus{
+  color:var(--ink);
+  background:#fff;
+  border:none;
+  box-shadow:0 1px 4px rgba(32,31,29,.12);
+}
+
+.tabset .tab-content{
+  background:transparent;
+  border:none;
+  padding:0;
+  min-height:120px;
+}
+
+.tabset .tab-content h3{
+  border:0;
+  margin-top:0;
+}
+
+table{
+  border-collapse:collapse;
+  width:100%;
+}
+
+table th{
+  border-bottom:2px solid var(--ink);
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px;
+  text-transform:uppercase;
+  color:var(--muted);
+  text-align:left;
+  padding:8px 10px;
+}
+
+table td{
+  border-bottom:1px solid var(--line);
+  padding:8px 10px;
+  font-size:13.5px;
+}
+
+@media (max-width:1200px){
+  .side-menu{
+    position:static;
+    width:auto;
+    max-height:none;
+    margin:15px 15px 25px;
+  }
+  .main-container{
+    max-width:900px !important;
+    margin-left:auto !important;
+    margin-right:auto !important;
+  }
+  .cover-page{
+    min-height:auto;
+    padding:40px 30px;
+  }
+}
+```
+
+<nav class="side-menu" aria-label="Navegación del documento">
+  <div class="side-menu-title">DOCUMENTO TÉCNICO</div>
+  <ul>
+    <li data-target="portada">
+      <a href="#portada">
+        <span class="menu-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>
+        </span>
+        <span class="menu-text"><span class="menu-title">Portada</span></span>
+      </a>
+    </li>
+    <li data-target="introduccion">
+      <a href="#introduccion">
+        <span class="menu-text">
+          <span class="menu-num">01</span>
+          <span class="menu-title">Introducción</span>
+        </span>
+      </a>
+    </li>
+    <li data-target="descripcion">
+      <a href="#descripcion">
+        <span class="menu-text">
+          <span class="menu-num">02</span>
+          <span class="menu-title">Descripción de los datos</span>
+        </span>
+      </a>
+    </li>
+    <li data-target="exploracion">
+      <a href="#exploracion">
+        <span class="menu-text">
+          <span class="menu-num">03</span>
+          <span class="menu-title">Exploración y preparación</span>
+        </span>
+      </a>
+    </li>
+    <li data-target="aplicacion">
+      <a href="#aplicacion">
+        <span class="menu-text">
+          <span class="menu-num">04</span>
+          <span class="menu-title">Modelos aplicados</span>
+        </span>
+      </a>
+    </li>
+    <li data-target="resultados">
+      <a href="#resultados">
+        <span class="menu-text">
+          <span class="menu-num">05</span>
+          <span class="menu-title">Resultados</span>
+        </span>
+      </a>
+    </li>
+    <li data-target="discusion">
+      <a href="#discusion">
+        <span class="menu-text">
+          <span class="menu-num">06</span>
+          <span class="menu-title">Discusión</span>
+        </span>
+      </a>
+    </li>
+    <li data-target="conclusiones">
+      <a href="#conclusiones">
+        <span class="menu-text">
+          <span class="menu-num">07</span>
+          <span class="menu-title">Conclusiones</span>
+        </span>
+      </a>
+    </li>
+  </ul>
+</nav>
+
+<div class="cover-page page-section active-section" id="portada">
+<div class="cover-title">DOCUMENTO TÉCNICO</div>
+<div class="cover-institution">
+<strong>Colegio Universitario de Cartago</strong><br>
+Big Data<br>
+BD-165 - Modelos estadísticos avanzados de análisis de datos<br>
+Proyecto Final
+</div>
+<div class="cover-members">
+<strong>Integrantes</strong>
+<ul>
+<li>Marisol Víquez Rivera</li>
+<li>Camila Jimenez</li>
+<li>Gilary Granados Calvo</li>
+<li>Fernando Contreras Artavia</li>
+<li>Johel Barquero</li>
+</ul>
+</div>
+</div>
+
+## Introducción {#introduccion .page-section}
+
+El comercio electrónico genera de forma continua grandes volúmenes de datos sobre clientes, productos y transacciones, cuyo análisis permite comprender mejor el comportamiento de compra y el desempeño del negocio. En este contexto, el presente proyecto tiene como objetivo aplicar técnicas de análisis multivariado a un conjunto de datos de ventas de comercio electrónico, con el fin de identificar patrones de compra, evaluar el efecto de factores como la región y la categoría del producto sobre los ingresos y la satisfacción de los clientes, y analizar el comportamiento de los ingresos mensuales a lo largo del tiempo.
+
+Para ello se emplean tres técnicas estudiadas en el curso: agrupamiento por K-medoids (PAM), para segmentar las transacciones según variables numéricas asociadas al comportamiento de compra; MANOVA, para determinar si la región geográfica y la categoría del producto influyen conjuntamente en el revenue y en el customer rating; y análisis de series temporales.
+
+A partir de estos análisis, el proyecto busca responder tres preguntas centrales:  Identificar patrones de comportamiento de compra entre las transacciones registradas.¿La región geográfica y la categoría del producto influyen en el desempeño de las ventas (revenue) y en la satisfacción de los clientes (customer rating) de una tienda? ¿Cuál es la tendencia y el patrón estacional de los ingresos (revenue) mensuales de la tienda en línea entre 2022 y 2025, y qué modelo de suavización exponencial (SES, Holt o Holt-Winters) predice mejor las ventas futuras?
+
+## Descripción de los datos {#descripcion .page-section}
+
+<strong>Fuente de datos:</strong> Ecommerce sales dataset<br>
+<strong>Fuente:</strong> https://www.kaggle.com/datasets/abbas829/ecommerce-sales-dataset<br>
+<strong>Estructura:</strong> 5000 filas y 15 columnas
+
+Este conjunto de datos contiene 5.000 transacciones minoristas sintéticas pero altamente realistas, diseñadas para reflejar la dinámica moderna del mercado online. Conecta la demografía de los clientes, la categorización de productos, las métricas financieras y la logística operativa en un único activo analítico coherente.
+
+<strong>Variables:</strong>
+
+Demografía: Edad, género y ubicación del cliente.
+
+Finanzas: Precios unitarios, cantidades, porcentajes de descuento aplicados e ingresos netos.
+
+Logística: Diferencias temporales entre las fechas de pedido y las fechas de envío.
+
+## Exploración y preparación {#exploracion .tabset .page-section}
+
+### Carga de datos
+
+```{r}
+#librerías
+#install.packages(c("cluster", "factoextra"))
+library(cluster)
+library(factoextra)
+library(tidyverse)
+library(biotools)
+library(car)
+library(ggplot2)
+library(forecast)
+
+df <- read.csv("../data/raw/ecommerce.csv")
+head(df)
+```
+
+### Tipos de variables
+```{r}
+str(df)
+```
+
+### Resumen del dataset
+```{r}
+summary(df)
+```
+
+### Dimensiones del df
+```{r}
+dim(df)
+```
+
+### Nulos
+```{r}
+colSums(is.na(df))
+```
+
+### Duplicados
+```{r}
+sum(duplicated(df))
+```
+
+### Tablas de Frecuencias 
+```{r}
+table(df$product_category)
+table(df$region)
+table(df$payment_method)
+
+# proporciones
+prop.table(table(df$product_category))
+```
+
+### Visualizaciones
+
+```{r, fig.width=12, fig.height=4}
+par(mfrow = c(1, 2))
+
+barplot(table(df$product_category), main = "Órdenes por categoría", las = 2,
+        col = c("#FF9AA2", "#FFB7B2", "#FFDAC1", "#E2F0CB", "#B5EAD7"))
+
+barplot(table(df$region), main = "Órdenes por región",
+        col = c("#A2D2FF", "#BDE0FE", "#CDB4DB", "#FFC8DD"))
+
+par(mfrow = c(1, 1))
+```
+
+### Análisis bivariado
+```{r, fig.width=12, fig.height=4}
+boxplot(revenue ~ product_category, data = df, las = 2, main = "Revenue por categoría",
+        col = c("#FF9AA2", "#FFB7B2", "#FFDAC1", "#E2F0CB", "#B5EAD7"),
+        xlab = "", ylab = "Revenue")
+
+boxplot(revenue ~ region, data = df, main = "Revenue por región",
+        col = c("#A2D2FF", "#BDE0FE", "#CDB4DB", "#FFC8DD"),
+        xlab = "Región", ylab = "Revenue")
+```
+
+### Cambiar el formato de la fecha
+
+```{r}
+df$order_date <- as.Date(df$order_date, format = "%m/%d/%Y")
+range(df$order_date)  # rango de fechas disponibles
+
+# órdenes por mes
+df$mes <- format(df$order_date, "%Y-%m")
+head(table(df$mes), 2)
+```
+
+```{r}
+write.csv(df, "datos_limpios.csv", row.names = FALSE)
+```
+
+```{r}
+### Preparación para K-medoids
+data_medoids <- read.csv("datos_limpios.csv")
+vars_cluster <- data_medoids[, c("quantity","unit_price","discount",
+                               "delivery_days","customer_rating","revenue")]
+```
+
+### Preparación para MANOVA
+
+```{r}
+#Convertir variables categóricas en factores
+datos <- read.csv("../data/processed/datos_limpios.csv")
+datos$region <- factor(datos$region)
+datos$product_category <- factor(datos$product_category)
+
+
+str(datos)
+head(datos)
+
+# Observaciones por grupo
+table(datos$region,
+      datos$product_category)
+
+
+#Análisis exploratorio para MANOVA
+datos %>%
+  group_by(region, product_category) %>%
+  summarise(
+    media_revenue = mean(revenue),
+    media_rating = mean(customer_rating),
+    .groups = "drop"
+  )
+```
+
+## Modelos aplicados {#aplicacion .tabset .page-section}
+
+### K-medoids
+#### ¿Qué patrones de compra pueden identificarse mediante K-Medoids?
+
+Se aplicó la técnica de agrupamiento K-medoids (PAM, *Partitioning Around Medoids*) sobre las variables numéricas, con el objetivo de identificar patrones de comportamiento de compra entre las transacciones registradas.
+
+Previo al modelado, las variables numéricas fueron estandarizadas. El número de clústeres (k=3) se determinó mediante el método del codo (que se mostrará más adelante), evaluando la suma de cuadrados dentro de los grupos para valores de k entre 1 y 6.
+```{r}
+# K-MEDOIDS 
+# escalar 
+datos_medoids <- scale(vars_cluster)
+```
+  
+```{r, results="hide", echo=TRUE}
+# PAM k-medoids
+set.seed(123)
+pam_fit <- pam(datos_medoids, k = 3)
+```
+
+```{r, results="hide", echo=TRUE}
+pam_fit$clustering
+pam_fit$medoids
+```
+
+### MANOVA
+#### ¿La región geográfica y la categoría del producto influyen en el desempeño de las ventas (revenue) y en la satisfacción de los clientes (customer rating) de una tienda?
+```{r}
+# MANOVA
+# Factores: region × product_category
+# Variables respuesta:
+#   - revenue
+#   - customer_rating
+
+#Supuestos
+
+# Normalidad multivariada
+# Prueba de Henze-Zirkler
+henze_zirkler <- function(X) {
+  X <- as.matrix(X)
+  n <- nrow(X)
+  p <- ncol(X)
+  S <- cov(X)
+  Sinv <- solve(S)
+  Xc <- scale(X, center = TRUE, scale = FALSE)
+  G <- Xc %*% Sinv %*% t(Xc)
+  Di <- diag(G)
+  Dij <- outer(Di, Di, "+") - 2*G
+  Dij[Dij < 0] <- 0
+
+  beta <- (1/sqrt(2))*((n*(2*p+1)/4)^(1/(p+4)))
+  b2 <- beta^2
+  t1 <- sum(exp(-b2/2*Dij))/n^2
+  t2 <- -2*(1+b2)^(-p/2)* sum(exp(-b2/(2*(1+b2))*Di))/n
+  t3 <- (1+2*b2)^(-p/2)
+  HZ <- n*(t1+t2+t3)
+  wb <- (1+b2)*(1+3*b2)
+  a <- 1+2*b2
+  mu <- 1 - a^(-p/2)*(1+p*b2/a+p*(p+2)*b2^2/(2*a^2))
+  si2 <-
+    2*(1+4*b2)^(-p/2)+
+    2*a^(-p)*
+    (1+2*p*b2^2/a^2+
+       3*p*(p+2)*b2^4/(4*a^4))-
+    4*wb^(-p/2)*
+    (1+3*p*b2^2/(2*wb)+
+       p*(p+2)*b2^4/(2*wb^2))
+
+  pmu <- log(sqrt(mu^4/(si2+mu^2)))
+  psi <- sqrt(log((si2+mu^2)/mu^2))
+  pval <- 1-pnorm((log(HZ)-pmu)/psi)
+  
+  cat("Prueba de Henze-Zirkler\n")
+  cat("HZ =",HZ,"\n")
+  cat("p =",pval,"\n")
+  if(pval>0.05){
+    cat("Existe normalidad multivariada\n")
+  }else{
+    cat("No existe normalidad multivariada\n")
+  }
+}
+
+vd <- datos[,c("revenue","customer_rating")]
+henze_zirkler(vd)
+
+```
+```{r}
+#Normalidad univariada
+mod_lm <- lm(cbind(revenue, customer_rating)~ region*product_category,
+  data=datos)
+
+res <- residuals(mod_lm)
+
+shapiro.test(res[,"revenue"])
+shapiro.test(res[,"customer_rating"])
+
+```
+
+```{r}
+#Homogeneidad de matrices
+boxM(datos[,c("revenue", "customer_rating")],
+  interaction(datos$region, datos$product_category))
+```
+
+```{r}
+#Homogeneidad de varianzas
+leveneTest(revenue~region*product_category,data=datos)
+
+leveneTest(customer_rating~region*product_category,data=datos)
+
+
+#Hipótesis:
+
+# Efecto de la región
+# H0:
+# El vector de medias de revenue y customer_rating es igual en todas las regiones.
+# H1:
+# Al menos una región posee un vector de medias diferente.
+
+# Efecto de la categoría del producto
+# H0:
+# El vector de medias es igual para todas las categorías.
+# H1:
+# Al menos una categoría presenta diferencias.
+
+# Interacción
+# H0:
+# El efecto de la categoría del producto no depende de la región.
+# H1:
+# Existe interacción entre ambos factores.
+```
+
+```{r}
+#Ajuste del modelo MANOVA
+modelo <- manova(cbind(revenue, customer_rating) ~ region*product_category,
+          data=datos)
+
+summary(modelo,test="Pillai")
+```
+
+```{r}
+#ANOVA de seguimiento
+summary.aov(modelo)
+```
+
+### Series temporales
+#### ¿Cuál es la tendencia y el patrón estacional de los ingresos (revenue) mensuales de la tienda en línea entre 2022 y 2025, y qué modelo de suavización exponencial (SES, Holt o Holt-Winters) predice mejor las ventas futuras?
+
+```{r}
+df <- read.csv("../data/processed/datos_limpios.csv")
+```
+
+```{r}
+# Filtrar el período 2022-2025.
+periodo <- subset(
+  df,
+  order_date >= as.Date("2022-01-01") &
+  order_date < as.Date("2026-01-01")
+)
+```
+
+```{r}
+# Convertir la columna de fecha a tipo Date.
+periodo$order_date <- as.Date(periodo$order_date)
+```
+
+```{r}
+# Extraer el año-mes de cada fecha.
+periodo$mes <- format(periodo$order_date, "%Y-%m")
+```
+
+```{r}
+# Promediar los ingresos por mes.
+mensual <- aggregate(revenue ~ mes, data = periodo, FUN = mean)
+```
+
+```{r}
+# Ordenar cronológicamente.
+mensual <- mensual[order(mensual$mes), ]
+```
+
+```{r}
+# Crear el objeto de serie de tiempo: 12 meses por ciclo, inicia en enero 2022.
+serie <- ts(mensual$revenue, frequency = 12, start = c(2022, 1))
+```
+
+```{r}
+# Mostrar la serie.
+serie
+```
+```{r}
+# Descomponer la serie en tendencia, estacionalidad e irregular.
+desc <- decompose(serie, type = "additive")
+```
+
+```{r}
+# SES: suavización exponencial simple (sin tendencia ni estacionalidad).
+ajuste_ses <- ses(serie, h = 6)
+```
+
+```{r}
+# Holt: agrega tendencia.
+ajuste_holt <- holt(serie, h = 6)
+```
+
+```{r}
+# Holt-Winters: agrega tendencia y estacionalidad.
+ajuste_hw <- hw(serie, seasonal = "additive", h = 12)
+```
+
+```{r}
+# Calcular las métricas de error de Holt y de Holt-Winters.
+accuracy(ajuste_ses)
+accuracy(ajuste_holt)   # modelo SIN estacionalidad
+accuracy(ajuste_hw)     # modelo CON estacionalidad
+```
+
+## Resultados {#resultados .tabset .page-section}
+### K-medoids
+```{r}
+# Método del codo para elegir k
+fviz_nbclust(datos_medoids, pam, method = "wss", k.max = 6) +
+  labs(title = "Método del codo para elegir k (PAM)")
+```
+
+La reducción en la dispersión se suaviza a partir de k=3, por lo que se seleccionó este valor para el modelo.
+
+```{r}
+# Visualización de los clústeres
+fviz_cluster(pam_fit,
+              geom = "point",  # <- esto quita las etiquetas de texto
+              main = "Agrupamiento con k-medoids (PAM)")
+
+
+# Agregar el clúster asignado a cada fila del dataframe original
+data_medoids$cluster_pam <- pam_fit$clustering
+```
+
+Se identifican 3 clústeres con cierta separación; los clústeres 2 y 3 muestran solapamiento parcial.
+
+```{r}
+boxplot(revenue ~ cluster_pam, data = data_medoids, col = c("#FF9AA2","#77DD77","#A2D2FF"),
+        main = "Revenue por clúster con K-medoids", xlab = "Clúster", ylab = "Revenue")
+```
+
+El clúster 1 concentra las compras de mayor valor, mientras los clústeres 2 y 3 presentan montos similares y más bajos.
+
+```{r}
+boxplot(delivery_days ~ cluster_pam, data = data_medoids, 
+        col = c("#FF9AA2","#77DD77","#A2D2FF"),
+        main = "Días de entrega por clúster", xlab = "Clúster", ylab = "Días de entrega")
+```
+
+El clúster 2 tiene las entregas más rápidas y el clúster 3 las más lentas, diferenciándolos pese a tener revenue similar.
+ 
+```{r}
+table(data_medoids$cluster_pam, data_medoids$product_category)
+```
+
+### MANOVA
+```{r}
+# Gráfico de interacción MANOVA
+medias <- datos %>%
+  group_by(region,
+           product_category) %>%
+  summarise(media_revenue = mean(revenue),
+    .groups="drop")
+
+ggplot(medias, aes(x=product_category, y=media_revenue,
+    color=region, group=region)) +
+  
+  geom_line(linewidth=1.2)+
+  geom_point(size=3)+
+  
+  labs(title="Interacción Región × Categoría del producto",
+    x="Categoría del producto", y="Ingreso promedio", color="Región")+
+  theme_minimal(base_size=12)
+```
+
+##### Interpretación del gráfico de interacción MANOVA:
+El gráfico muestra que el ingreso promedio varía entre las regiones según la categoría del producto. Por ejemplo, South y West presentan los mayores ingresos en la categoría Beauty, mientras que North destaca en Home. Aunque las líneas se cruzan y sugieren visualmente una posible interacción entre la región y la categoría del producto, el MANOVA indicó que dicha interacción no es estadísticamente significativa (p = 0.2525). Por ello, las diferencias observadas pueden atribuirse a la variabilidad de los datos y no a un efecto real entre ambos factores.
+
+### Series temporales
+```{r}
+ # Graficar la serie de ingresos mensuales.
+plot(serie, ylab = "Ingresos mensuales (revenue)",
+     main = "Ingresos mensuales - Tienda en línea")
+```
+
+Gráfico Ingresos mensuales - Tienda en línea
+
+La serie de ingresos mensuales presenta una alta variabilidad durante el período 2022–2025, con meses de ingresos elevados y otros con disminuciones considerables. No se observa una tendencia general claramente creciente o decreciente, ya que los ingresos cambian continuamente a lo largo del período. Además, se perciben variaciones que podrían repetirse entre los años, lo que sugiere la posible existencia de un componente estacional que será analizado mediante la descomposición de la serie.
+
+```{r}
+# Graficar los cuatro paneles.
+plot(desc)
+```
+
+Gráfico de la descomposición temporal
+
+La descomposición de la serie muestra que los ingresos presentan una tendencia variable, con una disminución hacia los últimos períodos. El componente estacional presenta un patrón repetitivo entre los años, evidenciando que determinados meses tienden a presentar ingresos relativamente mayores o menores de forma periódica. Finalmente, el componente aleatorio presenta fluctuaciones importantes, indicando que existen variaciones en los ingresos que no son explicadas completamente por la tendencia ni por la estacionalidad.
+
+```{r}
+autoplot(ajuste_ses) +
+  labs(title = "Suavización Exponencial Simple (SES)")
+```
+
+Gráfico Suavización Exponencial Simple (SES)
+
+La suavización exponencial simple genera una línea casi constante, ya que solo considera el nivel promedio de los ingresos. El modelo no toma en cuenta la tendencia ni la estacionalidad, por lo que no sigue los picos y disminuciones de la serie. El pronóstico para 2026 se mantiene prácticamente estable. Esto indica que el modelo no representa adecuadamente el comportamiento de los ingresos.
+
+```{r}
+autoplot(ajuste_holt) +
+  labs(title = "Método de Holt (con tendencia)")
+```
+
+Gráfico Método de Holt (con tendencia)
+
+El método de Holt considera la tendencia de los ingresos, por lo que la línea presenta una disminución a lo largo del tiempo. Sin embargo, no considera la estacionalidad, por lo que no logra representar los cambios mensuales de la serie. El pronóstico continúa con una tendencia decreciente, indicando que los ingresos podrían seguir disminuyendo.
+
+```{r}
+autoplot(ajuste_hw) +
+  labs(title = "Holt-Winters (tendencia + estacionalidad)")
+```
+
+Gráfico Holt-Winters (tendencia + estacionalidad)
+
+El método de Holt-Winters considera tanto la tendencia como la estacionalidad. Por eso, logra representar mejor los picos y disminuciones de los ingresos. Además, mantiene la tendencia decreciente observada en la serie. El pronóstico muestra que los ingresos podrían continuar disminuyendo, pero conservando un comportamiento estacional.
+
+## Discusión {#discusion .tabset .page-section}
+### K-medoids
+Los resultados de K-medoids muestran que las transacciones se agrupan en tres patrones diferenciados principalmente por el valor de la compra y el tiempo de entrega. El clúster 1 concentra compras de mayor valor, y los clústeres 2 y 3, se distinguen por tener entregas rápidas y lentas explicando el solapamiento parcial observado entre ellos en la visualización.
+
+**Limitación:** la elección de k=3 mediante el método del codo es parcialmente subjetiva, ya que la curva no presenta un quiebre muy marcado.
+
+### MANOVA
+
+El MANOVA evaluó si la región, la categoría del producto y su interacción influyen conjuntamente en revenue e customer_rating. Los resultados obtenidos fueron:
+
+Efecto	Valor p	Interpretación
+Región	0.8558	No significativo
+Categoría del producto	0.4217	No significativo
+Región × Categoría	0.2525	No significativo
+
+Como todos los valores p son mayores que 0.05, no se encontraron diferencias multivariadas significativas. Esto indica que las regiones, las categorías de productos y su interacción no influyen de forma conjunta en los ingresos ni en la calificación de los clientes.
+
+### ANOVA
+
+Como seguimiento al MANOVA, se realizaron ANOVA individuales para cada variable dependiente.
+
+##### Revenue
+Los valores p fueron:
+
+Región = 0.5613
+Categoría del producto = 0.4330
+Interacción = 0.3255
+
+Todos son mayores que 0.05, por lo que no existen diferencias significativas en los ingresos promedio entre los grupos evaluados.
+
+##### Customer Rating
+Los valores p fueron:
+
+Región = 0.9111
+Categoría del producto = 0.3524
+Interacción = 0.2562
+
+De igual forma, no se encontraron diferencias significativas en la calificación de los clientes. Estos resultados confirman las conclusiones obtenidas en el MANOVA.
+
+### Series temporales
+
+Modelo con los errores más bajos 
+
+El modelo Holt-Winters obtuvo los errores más bajos, con un MAE de 104.67, un RMSE de 129.08 y un MAPE de 10.72%. En comparación, SES obtuvo un MAE de 120.25, un RMSE de 149.10 y un MAPE de 12.68%, mientras que Holt presentó un MAE de 121.81, un RMSE de 154.20 y un MAPE de 12.72%.
+
+Estos resultados indican que incorporar la estacionalidad mejora el pronóstico, ya que Holt-Winters presenta menores errores que SES y Holt. Por lo tanto, los resultados confirman que considerar tanto la tendencia como la estacionalidad permite representar mejor el comportamiento de los ingresos.
+
+Pregunta
+
+¿Cuál de los tres reproduce mejor el patrón de la serie en su pronóstico? ¿Por qué?
+
+El modelo de Holt-Winters reproduce mejor el patrón de la serie, porque considera tanto la tendencia como la estacionalidad de los ingresos. A diferencia de SES, que mantiene un pronóstico casi constante, y de Holt, que solo considera la tendencia, Holt-Winters logra representar mejor los picos y disminuciones de la serie. Por esto, es el modelo que mejor se adapta al comportamiento observado y permite un pronóstico más acorde con el patrón de los ingresos.
+
+## Conclusiones {#conclusiones .tabset .page-section}
+### K-medoids
+
+El agrupamiento con K-medoids (PAM) permitió identificar tres patrones diferenciados de comportamiento de compra entre las transacciones, principalmente en función del valor de la compra (revenue) y del tiempo de entrega (delivery_days). El clúster 1 se distingue por concentrar las compras de mayor valor, mientras que los clústeres 2 y 3, con montos de compra similares y más bajos, se diferencian entre sí por la rapidez de la entrega: el clúster 2 agrupa las entregas más rápidas y el clúster 3 las más lentas. Este solapamiento parcial entre los clústeres 2 y 3 en la visualización confirma que la separación entre patrones de compra es más clara en la dimensión del valor de la compra que en la logística de entrega.
+
+En términos generales, la técnica permitió segmentar a los clientes en grupos con perfiles de compra distintos, lo cual resulta útil para orientar estrategias comerciales diferenciadas (por ejemplo, priorizar tiempos de entrega para el segmento de mayor valor).
+
+### MANOVA
+De acuerdo con los resultados del MANOVA, no existen diferencias estadísticamente significativas en el ingreso (revenue) ni en la calificación del cliente (customer_rating) entre las distintas regiones, categorías de productos o la interacción entre ambos factores, ya que todos los valores p obtenidos fueron mayores que 0.05 (Región: p = 0.8558; Categoría del producto: p = 0.4217; Interacción: p = 0.2525).
+
+Aunque el gráfico de interacción muestra variaciones en los ingresos promedio entre las regiones para algunas categorías de productos, estas diferencias no son lo suficientemente grandes para concluir que exista un efecto real desde el punto de vista estadístico. En consecuencia, se concluye que las variaciones observadas pueden atribuirse a la variabilidad natural de los datos y no a un efecto significativo de la región, la categoría del producto o de la combinación de ambas.
+
+### Series temporales
+La serie de ingresos mensuales del período 2022–2025 presenta una alta variabilidad, con cambios importantes entre los meses y una disminución hacia los últimos períodos. La descomposición permitió identificar una tendencia variable, un comportamiento estacional que se repite entre los años y fluctuaciones aleatorias que no son explicadas completamente por estos componentes. Al comparar los modelos, SES presentó un pronóstico casi constante, mientras que Holt logró representar la tendencia, pero no las variaciones estacionales.
+
+El modelo Holt-Winters fue el que mejor representó el comportamiento de la serie, ya que considera tanto la tendencia como la estacionalidad. Además, obtuvo los menores errores de pronóstico, con un MAE de 104.67, un RMSE de 129.08 y un MAPE de 10.72%. Estos resultados indican que incorporar la estacionalidad mejora el pronóstico, por lo que Holt-Winters es el modelo más adecuado de los tres analizados para pronosticar los ingresos de la tienda en línea.
+
+<script>
+(function(){
+  var ids = ["portada","introduccion","descripcion","exploracion","aplicacion","resultados","discusion","conclusiones"];
+
+  function showSection(id){
+    document.querySelectorAll('.page-section').forEach(function(el){
+      el.classList.remove('active-section');
+    });
+    var target = document.getElementById(id);
+    if(target) target.classList.add('active-section');
+
+    document.querySelectorAll('.side-menu li').forEach(function(li){
+      li.classList.remove('active');
+    });
+    var li = document.querySelector('.side-menu li[data-target="' + id + '"]');
+    if(li) li.classList.add('active');
+
+    window.scrollTo(0, 0);
+  }
+
+  document.querySelectorAll('.side-menu a[href^="#"]').forEach(function(a){
+    a.addEventListener('click', function(e){
+      e.preventDefault();
+      var id = a.getAttribute('href').substring(1);
+      if(ids.indexOf(id) !== -1) showSection(id);
+    });
+  });
+
+  showSection('portada');
+})();
+</script>
